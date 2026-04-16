@@ -1,0 +1,32 @@
+appId: com.crisaenz.motionclone
+productName: MotionClone
+directories:
+  buildResources: resources
+files:
+  - !include:src/renderer/dist/**/*
+  - dist/electron/main/**/*
+  - dist/electron/preload/**/*
+  - '!**/.vscode/*'
+asar: true
+win:
+  target:
+    - nsis
+  icon: resources/icon.ico
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+mac:
+  target:
+    - dmg
+  icon: resources/icon.icns
+  category: public.app-category.graphics-design
+linux:
+  target:
+    - AppImage
+  icon: resources/icon.png
+  category: Graphics
+publish:
+  provider: github
+  owner: crisaenz10
+  repo: motionclone

@@ -1,0 +1,16 @@
+{
+  "allowlist": [
+    {
+      "tool": "Bash",
+      "prompt": "read-only"
+    },
+    {
+      "tool": "Bash",
+      "prompt": "run npm commands"
+    },
+    {
+      "tool": "Bash",
+      "prompt": "git operations"
+    }
+  ]
+}
