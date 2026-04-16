@@ -49,6 +49,13 @@ function createWindow() {
 
 app.on('ready', () => {
   const store = new Store()
+
+  // Initialize default output folder if not set
+  if (!store.get('outputFolder')) {
+    const defaultOutputFolder = path.join(app.getPath('downloads'), 'MotionClone')
+    store.set('outputFolder', defaultOutputFolder)
+  }
+
   initDatabase()
   createWindow()
 
