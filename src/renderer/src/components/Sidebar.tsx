@@ -45,8 +45,8 @@ export function Sidebar() {
       </nav>
 
       <div className="p-3 border-t border-border">
-        <button className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-background font-semibold hover:bg-primary-hover transition-colors">
-          👤
+        <button className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-background font-semibold hover:bg-primary-hover transition-colors text-xs" title="MotionClone">
+          MC
         </button>
       </div>
     </div>
