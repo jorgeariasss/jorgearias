@@ -17,7 +17,7 @@ export function Generate() {
   const [quality, setQuality] = useState<'fast' | 'high'>('fast')
   const [resultUrl, setResultUrl] = useState<string>('')
 
-  const { status, loading, generate } = useGeneration()
+  const { status, loading, generate, reset } = useGeneration()
 
   useEffect(() => {
     if (status?.status === 'completed' && (status as any).videoUrl) {
@@ -105,6 +105,7 @@ export function Generate() {
   }
 
   const handleGenerateAnother = () => {
+    reset()
     setCurrentStep(1)
     setImageFile(null)
     setImagePreview('')

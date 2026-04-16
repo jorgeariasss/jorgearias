@@ -15,7 +15,9 @@ export function useGeneration() {
       }
     })
 
-    return unsubscribe
+    return () => {
+      unsubscribe()
+    }
   }, [])
 
   const generate = useCallback(
@@ -28,20 +30,32 @@ export function useGeneration() {
     }) => {
       setLoading(true)
       setStatus(null)
+      setGenerationId(null)
 
       try {
-        const id = await window.api.replicate.generate({
-          ...params
-        })
+        const id = await window.api.replicate.generate(params)
         setGenerationId(id)
         return id
       } catch (error) {
         setLoading(false)
+        setStatus({
+          generationId: '',
+          status: 'failed',
+          progress: 0,
+          message: error instanceof Error ? error.message : 'Unknown error',
+          error: error instanceof Error ? error.message : 'Unknown error'
+        })
         throw error
       }
     },
     []
   )
 
-  return { generationId, status, loading, generate }
+  const reset = useCallback(() => {
+    setGenerationId(null)
+    setStatus(null)
+    setLoading(false)
+  }, [])
+
+  return { generationId, status, loading, generate, reset }
 }
