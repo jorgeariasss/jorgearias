@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { toast } from 'sonner'
 import { StepIndicator } from '../components/StepIndicator'
 import { ImageUpload } from '../components/ImageUpload'
@@ -18,6 +18,14 @@ export function Generate() {
   const [resultUrl, setResultUrl] = useState<string>('')
 
   const { status, loading, generate } = useGeneration()
+
+  useEffect(() => {
+    if (status?.status === 'completed' && (status as any).videoUrl) {
+      setResultUrl((status as any).videoUrl)
+    } else if (status?.status === 'failed') {
+      toast.error(status.error || 'Falha na geração')
+    }
+  }, [status])
 
   const steps = [
     { label: 'Foto', number: 1 },

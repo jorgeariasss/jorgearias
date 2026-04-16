@@ -70,7 +70,8 @@ export function registerReplicateIPC(mainWindow: BrowserWindow) {
         generationId,
         status: 'completed',
         progress: 100,
-        message: 'Concluído!'
+        message: videoUrl,
+        videoUrl
       })
 
       return generationId
