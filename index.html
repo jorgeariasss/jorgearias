@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BetAnalytics Pro - Análise de Apostas Esportivas</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">⚽</div>
+                <div class="logo-text">
+                    <h1>BetAnalytics</h1>
+                    <span>PRO</span>
+                </div>
+            </div>
+            <nav class="nav">
+                <button class="nav-item active" data-view="dashboard">
+                    <span class="nav-icon">📊</span> Dashboard
+                </button>
+                <button class="nav-item" data-view="match-analysis">
+                    <span class="nav-icon">🎯</span> Análise de Partida
+                </button>
+                <button class="nav-item" data-view="value-bets">
+                    <span class="nav-icon">💎</span> Value Bets
+                </button>
+                <button class="nav-item" data-view="kelly">
+                    <span class="nav-icon">📈</span> Calculadora Kelly
+                </button>
+                <button class="nav-item" data-view="odds-converter">
+                    <span class="nav-icon">🔄</span> Conversor de Odds
+                </button>
+                <button class="nav-item" data-view="bankroll">
+                    <span class="nav-icon">💰</span> Banca
+                </button>
+                <button class="nav-item" data-view="history">
+                    <span class="nav-icon">📋</span> Histórico
+                </button>
+                <button class="nav-item" data-view="strategies">
+                    <span class="nav-icon">🧠</span> Estratégias
+                </button>
+            </nav>
+            <div class="responsible-gambling">
+                <strong>⚠️ Aposte com responsabilidade</strong>
+                <p>Esta ferramenta é apenas para análise estatística. Apostas envolvem risco. Aposte apenas o que pode perder.</p>
+            </div>
+        </aside>
+
+        <main class="main">
+            <!-- Dashboard -->
+            <section class="view active" id="dashboard">
+                <header class="view-header">
+                    <h2>Dashboard</h2>
+                    <p>Visão geral da sua performance de apostas</p>
+                </header>
+                <div class="stats-grid">
+                    <div class="stat-card stat-primary">
+                        <div class="stat-label">Banca Atual</div>
+                        <div class="stat-value" id="dash-bankroll">R$ 0,00</div>
+                        <div class="stat-change" id="dash-bankroll-change">+0,00%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">ROI</div>
+                        <div class="stat-value" id="dash-roi">0,00%</div>
+                        <div class="stat-change" id="dash-roi-detail">Retorno sobre investimento</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Taxa de Acerto</div>
+                        <div class="stat-value" id="dash-winrate">0,00%</div>
+                        <div class="stat-change" id="dash-winrate-detail">0 vitórias</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Apostado</div>
+                        <div class="stat-value" id="dash-total-bet">R$ 0,00</div>
+                        <div class="stat-change" id="dash-total-bets">0 apostas</div>
+                    </div>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Últimas Apostas</h3>
+                        <div class="recent-bets" id="dash-recent-bets">
+                            <div class="empty-state">Nenhuma aposta registrada ainda. Adicione uma no menu Histórico.</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Performance por Mercado</h3>
+                        <div class="market-performance" id="dash-markets">
+                            <div class="empty-state">Sem dados suficientes</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Análise de Partida -->
+            <section class="view" id="match-analysis">
+                <header class="view-header">
+                    <h2>Análise de Partida</h2>
+                    <p>Modelo Poisson para previsão estatística de placar e mercados</p>
+                </header>
+                <div class="card">
+                    <h3>Dados das Equipes</h3>
+                    <div class="match-form">
+                        <div class="team-form">
+                            <h4>🏠 Time Casa</h4>
+                            <div class="form-group">
+                                <label>Nome do Time</label>
+                                <input type="text" id="home-name" placeholder="Ex: Flamengo" value="Time Casa">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Gols marcados/jogo (casa)</label>
+                                    <input type="number" id="home-goals-for" step="0.01" value="1.85">
+                                </div>
+                                <div class="form-group">
+                                    <label>Gols sofridos/jogo (casa)</label>
+                                    <input type="number" id="home-goals-against" step="0.01" value="0.95">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team-form">
+                            <h4>✈️ Time Visitante</h4>
+                            <div class="form-group">
+                                <label>Nome do Time</label>
+                                <input type="text" id="away-name" placeholder="Ex: Palmeiras" value="Time Visitante">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Gols marcados/jogo (fora)</label>
+                                    <input type="number" id="away-goals-for" step="0.01" value="1.45">
+                                </div>
+                                <div class="form-group">
+                                    <label>Gols sofridos/jogo (fora)</label>
+                                    <input type="number" id="away-goals-against" step="0.01" value="1.20">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Média gols/jogo da liga</label>
+                            <input type="number" id="league-avg" step="0.01" value="2.65">
+                        </div>
+                        <div class="form-group">
+                            <label>Vantagem casa (multiplicador)</label>
+                            <input type="number" id="home-advantage" step="0.01" value="1.10">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="analyze-match">⚡ Calcular Análise</button>
+                </div>
+
+                <div id="analysis-results" class="hidden">
+                    <div class="card">
+                        <h3>Probabilidades 1X2</h3>
+                        <div class="probability-bars">
+                            <div class="prob-bar">
+                                <div class="prob-label"><span id="result-home-name">Casa</span></div>
+                                <div class="prob-track"><div class="prob-fill prob-home" id="prob-home-fill"></div></div>
+                                <div class="prob-value" id="prob-home-val">0%</div>
+                                <div class="prob-odds" id="prob-home-odds">@ 0.00</div>
+                            </div>
+                            <div class="prob-bar">
+                                <div class="prob-label">Empate</div>
+                                <div class="prob-track"><div class="prob-fill prob-draw" id="prob-draw-fill"></div></div>
+                                <div class="prob-value" id="prob-draw-val">0%</div>
+                                <div class="prob-odds" id="prob-draw-odds">@ 0.00</div>
+                            </div>
+                            <div class="prob-bar">
+                                <div class="prob-label"><span id="result-away-name">Visitante</span></div>
+                                <div class="prob-track"><div class="prob-fill prob-away" id="prob-away-fill"></div></div>
+                                <div class="prob-value" id="prob-away-val">0%</div>
+                                <div class="prob-odds" id="prob-away-odds">@ 0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <h3>Mercados de Gols</h3>
+                            <table class="market-table" id="goals-markets"></table>
+                        </div>
+                        <div class="card">
+                            <h3>Ambas Marcam (BTTS)</h3>
+                            <table class="market-table" id="btts-markets"></table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Placares Mais Prováveis</h3>
+                        <div class="scoreline-grid" id="scoreline-grid"></div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Hipóteses Esperadas (xG)</h3>
+                        <div class="xg-display">
+                            <div class="xg-team">
+                                <div class="xg-label" id="xg-home-name">Casa</div>
+                                <div class="xg-value" id="xg-home">0.00</div>
+                            </div>
+                            <div class="xg-divider">xG</div>
+                            <div class="xg-team">
+                                <div class="xg-label" id="xg-away-name">Visitante</div>
+                                <div class="xg-value" id="xg-away">0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Value Bets -->
+            <section class="view" id="value-bets">
+                <header class="view-header">
+                    <h2>Detector de Value Bets</h2>
+                    <p>Compare a sua probabilidade calculada vs odds da casa de apostas</p>
+                </header>
+                <div class="card">
+                    <h3>Calcular Valor Esperado</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Sua probabilidade (%)</label>
+                            <input type="number" id="vb-prob" step="0.1" min="0" max="100" value="55">
+                            <small>Probabilidade real estimada do evento ocorrer</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Odd da casa de apostas</label>
+                            <input type="number" id="vb-odd" step="0.01" min="1" value="2.10">
+                            <small>Cotação oferecida pela Betano/etc</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Valor da aposta (R$)</label>
+                            <input type="number" id="vb-stake" step="1" min="0" value="100">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="calc-value">Calcular EV</button>
+                </div>
+
+                <div class="dashboard-grid" id="vb-results">
+                    <div class="card stat-card stat-primary">
+                        <div class="stat-label">Valor Esperado (EV)</div>
+                        <div class="stat-value" id="vb-ev">R$ 0,00</div>
+                        <div class="stat-change" id="vb-ev-pct">0%</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Edge (Vantagem)</div>
+                        <div class="stat-value" id="vb-edge">0%</div>
+                        <div class="stat-change">Margem sobre a casa</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Odd Justa</div>
+                        <div class="stat-value" id="vb-fair-odd">0.00</div>
+                        <div class="stat-change">Odd que reflete a probabilidade real</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Recomendação</div>
+                        <div class="stat-value" id="vb-recommendation" style="font-size: 1.6rem;">-</div>
+                        <div class="stat-change" id="vb-rec-detail">-</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calculadora Kelly -->
+            <section class="view" id="kelly">
+                <header class="view-header">
+                    <h2>Calculadora Kelly Criterion</h2>
+                    <p>Determine o tamanho ideal da aposta baseado na sua banca e edge</p>
+                </header>
+                <div class="card">
+                    <h3>Parâmetros</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Banca total (R$)</label>
+                            <input type="number" id="kelly-bankroll" step="1" value="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Probabilidade (%)</label>
+                            <input type="number" id="kelly-prob" step="0.1" min="0" max="100" value="55">
+                        </div>
+                        <div class="form-group">
+                            <label>Odd</label>
+                            <input type="number" id="kelly-odd" step="0.01" min="1" value="2.10">
+                        </div>
+                        <div class="form-group">
+                            <label>Fração de Kelly</label>
+                            <select id="kelly-fraction">
+                                <option value="1">Kelly Pleno (100%)</option>
+                                <option value="0.5" selected>Meio Kelly (50%) - Recomendado</option>
+                                <option value="0.25">Quarto de Kelly (25%) - Conservador</option>
+                                <option value="0.1">Décimo de Kelly (10%) - Muito Conservador</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="calc-kelly">Calcular Stake</button>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card stat-card stat-primary">
+                        <div class="stat-label">Stake Recomendada</div>
+                        <div class="stat-value" id="kelly-stake">R$ 0,00</div>
+                        <div class="stat-change" id="kelly-stake-pct">0% da banca</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Kelly Pleno</div>
+                        <div class="stat-value" id="kelly-full">0%</div>
+                        <div class="stat-change">Sem fração aplicada</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Lucro Potencial</div>
+                        <div class="stat-value" id="kelly-profit">R$ 0,00</div>
+                        <div class="stat-change">Se a aposta vencer</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Crescimento Esperado</div>
+                        <div class="stat-value" id="kelly-growth">0%</div>
+                        <div class="stat-change">Por aposta (logarítmico)</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📚 O que é Kelly Criterion?</h3>
+                    <p>O Critério de Kelly é uma fórmula matemática que determina o percentual ideal da banca a ser apostado para maximizar o crescimento a longo prazo, evitando ruína. <strong>Fórmula: f = (bp - q) / b</strong>, onde b = odd-1, p = probabilidade real, q = 1-p.</p>
+                    <p><strong>Recomendação:</strong> Use sempre uma fração (1/2 ou 1/4 de Kelly) para reduzir variância. Kelly pleno tem alta volatilidade e exige estimativas perfeitas de probabilidade.</p>
+                </div>
+            </section>
+
+            <!-- Conversor de Odds -->
+            <section class="view" id="odds-converter">
+                <header class="view-header">
+                    <h2>Conversor de Odds</h2>
+                    <p>Converta entre formatos decimal, fracionário, americano e probabilidade implícita</p>
+                </header>
+                <div class="card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Decimal (Europeu)</label>
+                            <input type="number" id="odd-decimal" step="0.01" value="2.00" data-format="decimal">
+                        </div>
+                        <div class="form-group">
+                            <label>Fracionário (UK)</label>
+                            <input type="text" id="odd-fractional" value="1/1" data-format="fractional">
+                        </div>
+                        <div class="form-group">
+                            <label>Americano (US)</label>
+                            <input type="number" id="odd-american" step="1" value="100" data-format="american">
+                        </div>
+                        <div class="form-group">
+                            <label>Probabilidade Implícita (%)</label>
+                            <input type="number" id="odd-probability" step="0.01" value="50" data-format="probability">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Calculadora de Margem (Vig/Juice)</h3>
+                    <p>Calcule a margem da casa em mercados 1X2</p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Odd Casa</label>
+                            <input type="number" id="margin-home" step="0.01" value="2.10">
+                        </div>
+                        <div class="form-group">
+                            <label>Odd Empate</label>
+                            <input type="number" id="margin-draw" step="0.01" value="3.40">
+                        </div>
+                        <div class="form-group">
+                            <label>Odd Visitante</label>
+                            <input type="number" id="margin-away" step="0.01" value="3.60">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="calc-margin">Calcular Margem</button>
+                    <div class="margin-results" id="margin-results"></div>
+                </div>
+            </section>
+
+            <!-- Banca -->
+            <section class="view" id="bankroll">
+                <header class="view-header">
+                    <h2>Gestão de Banca</h2>
+                    <p>Configure e acompanhe a evolução da sua banca</p>
+                </header>
+                <div class="card">
+                    <h3>Configurar Banca</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Banca Inicial (R$)</label>
+                            <input type="number" id="br-initial" step="1" value="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Banca Atual (R$)</label>
+                            <input type="number" id="br-current" step="1" value="1000">
+                        </div>
+                        <div class="form-group">
+                            <label>Stake Padrão (% da banca)</label>
+                            <input type="number" id="br-stake-pct" step="0.1" value="2">
+                        </div>
+                        <div class="form-group">
+                            <label>Stop Loss Diário (% da banca)</label>
+                            <input type="number" id="br-stop-loss" step="0.5" value="10">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="save-bankroll">💾 Salvar Configuração</button>
+                </div>
+
+                <div class="card">
+                    <h3>Resumo</h3>
+                    <div class="bankroll-summary" id="bankroll-summary"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Recomendações de Gestão</h3>
+                    <ul class="tips-list">
+                        <li><strong>Stake Fixa:</strong> Aposte sempre o mesmo % da banca (1-3% para iniciantes)</li>
+                        <li><strong>Stop Loss:</strong> Pare de apostar ao perder X% da banca em um dia</li>
+                        <li><strong>Stop Win:</strong> Considere parar ao atingir uma meta de ganho diário</li>
+                        <li><strong>Reserva de Emergência:</strong> Nunca aposte dinheiro reservado para contas essenciais</li>
+                        <li><strong>Disciplina:</strong> Não persiga perdas (chase losses) com apostas maiores</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Histórico -->
+            <section class="view" id="history">
+                <header class="view-header">
+                    <h2>Histórico de Apostas</h2>
+                    <p>Registre e analise todas as suas apostas</p>
+                </header>
+                <div class="card">
+                    <h3>Nova Aposta</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Data</label>
+                            <input type="date" id="bet-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Evento</label>
+                            <input type="text" id="bet-event" placeholder="Ex: Flamengo x Palmeiras">
+                        </div>
+                        <div class="form-group">
+                            <label>Mercado</label>
+                            <select id="bet-market">
+                                <option>1X2 - Casa</option>
+                                <option>1X2 - Empate</option>
+                                <option>1X2 - Visitante</option>
+                                <option>Over 0.5 Gols</option>
+                                <option>Over 1.5 Gols</option>
+                                <option>Over 2.5 Gols</option>
+                                <option>Over 3.5 Gols</option>
+                                <option>Under 2.5 Gols</option>
+                                <option>Ambas Marcam - Sim</option>
+                                <option>Ambas Marcam - Não</option>
+                                <option>Handicap Asiático</option>
+                                <option>Escanteios</option>
+                                <option>Cartões</option>
+                                <option>Outros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Stake (R$)</label>
+                            <input type="number" id="bet-stake" step="0.01" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Odd</label>
+                            <input type="number" id="bet-odd" step="0.01" value="2.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Resultado</label>
+                            <select id="bet-result">
+                                <option value="pending">Pendente</option>
+                                <option value="win">Vitória</option>
+                                <option value="loss">Derrota</option>
+                                <option value="void">Anulada</option>
+                                <option value="halfwin">Meia Vitória</option>
+                                <option value="halfloss">Meia Derrota</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="add-bet">➕ Adicionar Aposta</button>
+                </div>
+
+                <div class="card">
+                    <h3>Apostas Registradas</h3>
+                    <div class="bets-table-wrapper">
+                        <table class="bets-table" id="bets-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Evento</th>
+                                    <th>Mercado</th>
+                                    <th>Stake</th>
+                                    <th>Odd</th>
+                                    <th>Resultado</th>
+                                    <th>Lucro</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bets-tbody">
+                                <tr><td colspan="8" class="empty-state">Nenhuma aposta registrada</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estratégias -->
+            <section class="view" id="strategies">
+                <header class="view-header">
+                    <h2>Estratégias e Conceitos</h2>
+                    <p>Guia educacional sobre apostas com valor</p>
+                </header>
+                <div class="strategies-grid">
+                    <div class="card strategy-card">
+                        <h3>🎯 Value Betting</h3>
+                        <p>Apostar quando a probabilidade real do evento é maior do que a probabilidade implícita na odd. É a única forma comprovada de lucro a longo prazo.</p>
+                        <p><strong>Fórmula:</strong> EV = (Probabilidade × Odd) - 1</p>
+                        <p>Se EV &gt; 0, há valor positivo na aposta.</p>
+                    </div>
+                    <div class="card strategy-card">
+                        <h3>📊 Modelo de Poisson</h3>
+                        <p>Distribuição estatística usada para modelar a quantidade de gols em uma partida. Calcula probabilidades de cada placar com base nas médias ofensivas e defensivas.</p>
+                        <p><strong>P(k) = (λ^k × e^(-λ)) / k!</strong></p>
+                    </div>
+                    <div class="card strategy-card">
+                        <h3>💰 Kelly Criterion</h3>
+                        <p>Fórmula que determina o tamanho ótimo da aposta. Maximiza o crescimento logarítmico da banca evitando ruína.</p>
+                        <p>Use sempre <strong>frações de Kelly</strong> (1/2 ou 1/4) para reduzir variância.</p>
+                    </div>
+                    <div class="card strategy-card">
+                        <h3>🔍 Análise de Margens</h3>
+                        <p>Casas de apostas embutem uma margem (vig/juice) nas odds. Mercados com menor margem oferecem melhor valor.</p>
+                        <p>Mercado 1X2: margem típica de 4-7%</p>
+                        <p>Asian Handicap: margem típica de 2-3%</p>
+                    </div>
+                    <div class="card strategy-card">
+                        <h3>📈 Closing Line Value (CLV)</h3>
+                        <p>Comparar a odd que você pegou com a odd de fechamento. Se você bate a CL consistentemente, está apostando com valor.</p>
+                        <p>CLV positivo é o melhor indicador de lucratividade futura.</p>
+                    </div>
+                    <div class="card strategy-card">
+                        <h3>🧠 Vieses Cognitivos</h3>
+                        <p><strong>Recência:</strong> Sobrevalorizar resultados recentes</p>
+                        <p><strong>Ancoragem:</strong> Fixar-se na primeira informação</p>
+                        <p><strong>Falácia do apostador:</strong> Achar que eventos passados influenciam futuros</p>
+                        <p>Reconhecê-los é o primeiro passo para evitá-los.</p>
+                    </div>
+                    <div class="card strategy-card warning">
+                        <h3>⚠️ Erros Comuns</h3>
+                        <p>• Apostar com emoção ou em times do coração</p>
+                        <p>• Múltiplas com muitas seleções (margens compostas)</p>
+                        <p>• Perseguir perdas com apostas maiores</p>
+                        <p>• Ignorar a gestão de banca</p>
+                        <p>• Confundir sorte com habilidade</p>
+                    </div>
+                    <div class="card strategy-card">
+                        <h3>📚 Métricas Importantes</h3>
+                        <p><strong>ROI:</strong> Lucro / Total Apostado × 100</p>
+                        <p><strong>Yield:</strong> Mesmo que ROI no contexto de apostas</p>
+                        <p><strong>Win Rate:</strong> % de apostas vencidas</p>
+                        <p><strong>Drawdown:</strong> Maior queda da banca em série de perdas</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/analysis.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
